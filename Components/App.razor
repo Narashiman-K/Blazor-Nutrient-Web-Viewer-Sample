@@ -1,0 +1,37 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <base href="/" />
+    <link rel="stylesheet" href="app.css" />
+    <link rel="stylesheet" href="BlazorWebSample.styles.css" />
+    <HeadOutlet />
+</head>
+
+<body>
+    <Routes />
+    <script src="_framework/blazor.web.js"></script>
+    <script src="nutrient-viewer.js"></script>
+    <script>
+        function loadPDF(container, document) {
+            const dataUrl = "data:application/pdf;base64," + document;
+            NutrientViewer.load({
+              //licenseKey: "your license key goes here", // if commented or not provided it still works with a big red watermark, but all features works as it has too. 
+              container: container,
+              document: dataUrl,
+              theme: PSPDFKit.Theme.DARK,
+            }).then((instance) => {
+                const items = instance.toolbarItems;
+                // Remove zoom and pan buttons by filtering them out similarly we can remove or add any default 
+                instance.setToolbarItems(
+                  items.filter(
+                    (item) => item.type !== "zoom-in" && item.type !== "zoom-out" && item.type !== "pan"
+                  )
+                );
+            });        
+        }
+    </script>
+</body>
+</html>

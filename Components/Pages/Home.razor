@@ -1,0 +1,36 @@
+﻿@page "/"
+@inject IJSRuntime JS
+@rendermode InteractiveServer
+@inject HttpClient Http
+@inject NavigationManager Nav
+
+<PageTitle>Nutrient Blazor Sample</PageTitle>
+<div id='container' style='background: gray; width: 100vw; height: 100vh; margin: 0 auto;'></div>
+
+@code {
+
+    // this is working one with directly passing the pdf file in the wwwroot
+    // protected override async void OnAfterRender(bool firstRender)
+    // {
+    //     if (firstRender)
+    //     {
+    //         await JS.InvokeVoidAsync("loadPDF", "#container", "document.pdf");
+    //     }
+    // }
+
+    protected override async void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // Build absolute URL for static file
+            var url = Nav.BaseUri + "document.pdf";
+
+            var pdfBytes = await Http.GetByteArrayAsync(url);
+            var base64 = Convert.ToBase64String(pdfBytes);
+            await JS.InvokeVoidAsync("loadPDF", "#container", base64);
+        }
+    }
+
+    // you can add any C# code here using functions... 
+
+}
